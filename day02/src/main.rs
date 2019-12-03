@@ -3,18 +3,25 @@ fn main() {
     let file = file.trim();
     let prog = file.split(",").map(|i| i.parse::<i32>().unwrap()).collect::<Vec<_>>();
 
-    let mut part1 = prog.clone();
-    part1[1] = 12;
-    part1[2] = 2;
-    run(&mut part1);
-    println!("{}", part1[0]);
+    println!("part1: {}", run(&prog, 12, 2));
+
+    for noun in 0..99 {
+        for verb in 0..99 {
+            if run(&prog, noun, verb) == 19690720 {
+                println!("part2: {}", 100*noun + verb);
+            }
+        }
+    }
 }
 
-fn run(prog: &mut Vec<i32>) {
+fn run(prog: &Vec<i32>, noun: i32, verb: i32) -> i32{
     let mut i = 0;
+    let mut p = prog.clone();
+    p[1] = noun;
+    p[2] = verb;
     loop {
-        let (o,a,b,pos) = (prog[i],prog[prog[i+1]as usize],prog[prog[i+2]as usize],prog[i+3]);
-        prog[pos as usize] = match o {
+        let (o,a,b,pos) = (p[i],p[p[i+1]as usize],p[p[i+2]as usize],p[i+3]);
+        p[pos as usize] = match o {
             1 => a+b,
             2 => a*b,
             99 => break,
@@ -22,4 +29,5 @@ fn run(prog: &mut Vec<i32>) {
         };
         i += 4;
     }
+    p[0]
 }
